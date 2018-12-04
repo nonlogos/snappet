@@ -1,3 +1,4 @@
+'use strict';
 import passport from 'passport';
 
 const router = app => {
@@ -12,7 +13,7 @@ const router = app => {
     res.redirect('/');
   });
 
-  app.get('/api/current_user', (req, res) => {
+  app.get('/current_user', (req, res) => {
     res.status(200).send(req.user);
   });
 };

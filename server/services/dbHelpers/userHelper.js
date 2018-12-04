@@ -1,6 +1,7 @@
+'use strict';
 import mongoose from 'mongoose';
 
-import '../models/User';
+import '../../models/User';
 
 const User = mongoose.model('User');
 
@@ -11,14 +12,20 @@ export const userFindOrUpdate = async (user, accessToken, refreshToken) => {
     const userMap = mapUserObj(user, accessToken, refreshToken);
     const updatedUser = await User.findOneAndUpdate({ githubId: user.id }, userMap, { new: true });
     return updatedUser;
-  } catch (e) {
-    throw new Error('userFindOrUpdate error: ' + error);
+  } catch (error) {
+    console.log('userFindOrUpdate error: ', error);
+    throw error;
   }
 };
 
 export const userFindById = async id => {
-  const user = await User.findById(id);
-  return user;
+  try {
+    const user = await User.findById(id);
+    return user;
+  } catch (error) {
+    console.log('userFindById: ', error);
+    throw error;
+  }
 };
 
 export const createNewUser = async (user, accessToken, refreshToken) => {
@@ -28,8 +35,9 @@ export const createNewUser = async (user, accessToken, refreshToken) => {
     const userMap = mapUserObj(user, accessToken, refreshToken);
     const newUser = await new User(userMap).save();
     return newUser;
-  } catch (e) {
-    throw new Error('createNewUser error: ' + error);
+  } catch (error) {
+    console.log('createNewUser: ', error);
+    throw error;
   }
 };
 
@@ -49,6 +57,7 @@ const mapUserObj = (user, accessToken, refreshToken) => {
       node_id: user.node_id,
     };
   } catch (error) {
-    throw new Error('mapUserObj error: ' + error);
+    console.log('mapUserObj: ', error);
+    throw error;
   }
 };

@@ -1,3 +1,4 @@
+'use strict';
 import http from 'http';
 // import { execute, subscribe } from 'graphql'
 

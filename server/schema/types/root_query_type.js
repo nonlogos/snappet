@@ -1,9 +1,9 @@
-import graphql, { GraphQLObjectType, GraphQLID } from 'graphql';
+'use strict';
+import graphql, { GraphQLObjectType, GraphQLID, GraphQLList } from 'graphql';
 import UserType from './user_type';
-import mongoose from 'mongoose';
-import '../../models/User';
-
-const User = mongoose.model('User');
+import GistType from './gist_type';
+import { userFindById } from '../../services/dbHelpers/userHelper';
+import { getGistsByUser } from '../../services/dbHelpers/gistHelper';
 
 const RootQueryType = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -11,8 +11,15 @@ const RootQueryType = new GraphQLObjectType({
     user: {
       type: UserType,
       async resolve(parentValue, args, req) {
-        const user = await User.findOne({ id: req.user.id });
+        const user = await userFindById(req.user);
         return user;
+      },
+    },
+    gists: {
+      type: new GraphQLList(GistType),
+      async resolve(parentValue, args, req) {
+        const gists = await getGistsByUser(req.user);
+        return gists;
       },
     },
   },

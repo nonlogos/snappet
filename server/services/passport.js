@@ -1,8 +1,9 @@
+'use strict';
 import passport from 'passport';
 import { Strategy } from 'passport-github2';
 import mongoose from 'mongoose';
 
-import { userFindOrUpdate, createNewUser } from '../services/dbHelper';
+import { userFindOrUpdate, createNewUser } from './dbHelpers/userHelper';
 
 passport.serializeUser((user, done) => {
   done(null, user.id);

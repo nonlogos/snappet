@@ -41,7 +41,7 @@ module.exports = {
   },
   plugins: [
     new Dotenv(),
-    new StartServerPlugin('./server/server.js'),
+    new StartServerPlugin('server.js'),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
@@ -50,5 +50,5 @@ module.exports = {
     }),
     new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw: true, entryOnly: false }),
   ],
-  output: { path: path.join(__dirname, 'dist'), filename: './server/server.js' },
+  output: { path: path.join(__dirname, 'dist'), filename: 'server.js' },
 };

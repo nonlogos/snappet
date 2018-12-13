@@ -68,7 +68,7 @@ app.use(function(err, req, res, next) {
 
 // catch all
 app.all('*', (req, res) => {
-  res.json({ ok: true });
+  res.json({ ok: false });
 });
 
 export default app;

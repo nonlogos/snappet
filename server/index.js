@@ -1,9 +1,6 @@
 'use strict';
 import http from 'http';
-// import { execute, subscribe } from 'graphql'
-
 import app from './server';
-// import schema from './schema'
 
 const server = http.createServer(app);
 let currentApp = app;

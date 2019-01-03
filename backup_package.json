@@ -1,0 +1,18 @@
+"scripts": {
+    "watch:api": "./node_modules/.bin/nodemon -e js --watch --exec ./node_modules/.bin/babel-node server/api-server/index.js",
+    "watch:ui": "./node_modules/.bin/nodemon -e js --watch --exec ./node_modules/.bin/babel-node ./server/asset-server/index.js",
+    "watch": "concurrently --names 'API,UI' -c 'bgBlue,bgMagenta' 'yarn watch:api' 'yarn watch:ui'",
+    "start:api": "./node_modules/.bin/babel-node server/api-server/index.js",
+    "start:ui": "./node_modules/.bin/babel-node server/asset-server/index.js",
+    "start": "concurrently --names 'API, UI' -c 'bgBlue, bgMagento' 'yarn run start:api' 'yarn run start:ui'",
+    "webpack": "./node_modules/.bin/babel-node ./node_modules/.bin/webpack",
+    "build:dev": "yarn clean && yarn webpack --config webpack.config.js --env dev",
+    "build:prod": "yarn clean && yarn webpack --config webpack.config.js --env prod",
+    "clean": "rm -rf dist/* && yarn run prepcerts",
+    "test": "jest",
+    "prepvapid": "web-push generate-vapid-keys --json > ./private/vapid.json",
+    "prepcerts": "yarn run prepvapid && ./node_modules/.bin/babel-node ./server/gen-certs.js && rm -rf dist/*.pem && mkdir -p dist && cp private/*.pem dist/",
+    "sementic-release": "sementic-release",
+    "travis-deploy-once": "travis-deploy-once",
+    "serve": "./node_modules/.bin/http-serve ./dist -g -S -C ./dist/cert.pem -K ./dist/key.pem -o"
+  },

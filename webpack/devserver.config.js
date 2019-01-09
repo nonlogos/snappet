@@ -1,20 +1,19 @@
-import fs from 'fs';
-
 /* eslint-env node */
+const fs = require('fs');
 
-const devServer = () => {
+module.exports = () => {
   return {
-    hot: true,
     port: 3000,
-    host: 'localhost',
-    historyApiFallback: true,
-    compress: false,
-    debug: true,
-    disableHostCheck: true,
+    open: true,
     stats: {
       colors: true,
     },
+    https: {
+      key: fs.readFileSync('./private/key.pem'),
+      cert: fs.readFileSync('./private/cert.pem'),
+    },
+    proxy: {
+      '/api': 'https://localhost:3100',
+    },
   };
 };
-
-export default devServer;

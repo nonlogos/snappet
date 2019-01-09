@@ -3,21 +3,17 @@ import net from 'net';
 import http from 'http';
 import https from 'https';
 import path from 'path';
+import bodyParser from 'body-parser';
 
 import chalk from 'chalk';
-import webpackDevMiddleware from 'webpack-dev-middleware';
 import express from 'express';
-import webpack from 'webpack';
-import webpackConfig from '../../webpack.config';
 
-const HTTP_BASE_ADDRESS = 3000;
+const HTTP_BASE_ADDRESS = 3100;
 const HTTP_REDIRECT_ADDRESS = 3001;
 const HTTPS_ADDRESS = 3443;
 
 const TLS_KEY_PATH = path.join(__dirname, '..', '..', 'private', 'key.pem');
 const TLS_CERT_PATH = path.join(__dirname, '..', '..', 'private', 'cert.pem');
-
-const devMode = process.env.NODE_ENV !== 'production';
 
 const app = express();
 
@@ -45,7 +41,7 @@ const httpsOptions = {
 };
 
 const tcpConnection = conn => {
-  conn.on('error', err => console.log('error:', err.stack));
+  conn.on('error', err => console.log('tcp connection error:', err.stack));
   conn.once('data', buf => {
     // A TLS handshake record starts with byte 22
     const address = buf[0] === 22 ? HTTPS_ADDRESS : HTTP_REDIRECT_ADDRESS;
@@ -68,26 +64,15 @@ https.createServer(httpsOptions, app).listen(HTTPS_ADDRESS, error => {
   if (error) {
     console.log('https server error: ', error);
     return process.exit(1);
-  } else console.log('https listening');
+  } else console.log('https server listening');
 });
 
-const compiler = webpack(webpackConfig());
-let hotMiddleware;
-let webpackMiddleware;
-console.log('devMode', devMode);
-if (devMode) {
-  hotMiddleware = require('webpack-hot-middleware')(compiler);
-  webpackMiddleware = webpackDevMiddleware(compiler, {
-    noInfo: true,
-    publicPath: '/',
-    hot: true,
-    stats: {
-      colors: true,
-    },
-  });
-  app.use(hotMiddleware);
-  app.use(webpackMiddleware);
-}
+app.disable('x-powered-by');
+app.use(bodyParser.json());
+app.use('/api', (req, res) => res.json({ ok: true }));
+
+// Run the app by serving the static files in the dist directory
+app.use(express.static(path.join(__dirname, '..', '..', 'dist')));
 
 app.get('*', (req, res, next) => {
   const accept = req.headers.accept || '';
@@ -96,9 +81,7 @@ app.get('*', (req, res, next) => {
     return;
   }
   const pth = path.join(__dirname, '..', '..', 'dist', 'index.html');
-  if (devMode) res.write(webpackMiddleware.fileSystem.readFileSync(pth));
-  else res.sendFile(pth);
-  res.end();
+  res.sendFile(pth);
 });
 
-process.stdout.write(chalk.yellow(' 💻  UI is served on https://localhost:3000\n'));
+process.stdout.write(chalk.yellow(' 💻  UI is served on https://localhost:3100\n'));

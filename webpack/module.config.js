@@ -1,8 +1,8 @@
 /* eslint-env node */
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const devMode = process.env.NODE_ENV !== 'production';
 
-const moduleConfig = () => {
+module.exports = () => {
   return {
     rules: [
       {
@@ -33,5 +33,3 @@ const moduleConfig = () => {
     ],
   };
 };
-
-export default moduleConfig;

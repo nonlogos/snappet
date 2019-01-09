@@ -1,14 +1,14 @@
-import webpack from 'webpack';
-import htmlWebpackPlugin from 'html-webpack-plugin';
-import compressionPlugin from 'compression-webpack-plugin';
-import StyleExtHtmlWebpackPlugin from 'style-ext-html-webpack-plugin';
-import ManifestPlugin from 'webpack-manifest-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+const webpack = require('webpack');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const compressionPlugin = require('compression-webpack-plugin');
+const StyleExtHtmlWebpackPlugin = require('style-ext-html-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-import extractSass from './extract-sass';
-import html from './html.config';
+const extractSass = require('./extract-sass');
+const html = require('./html.config');
 
-const pluginsConfig = (env, options) => {
+module.exports = (env, options) => {
   const plugins = [
     extractSass,
     new htmlWebpackPlugin(html),
@@ -49,5 +49,3 @@ const pluginsConfig = (env, options) => {
   // plugins.push(new StyleExtHtmlWebpackPlugin());
   return plugins;
 };
-
-export default pluginsConfig;

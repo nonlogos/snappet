@@ -18,7 +18,7 @@ module.exports = () => {
       },
       {
         test: /\.(sa|sc|c)ss$/,
-        use: [devMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
         type: 'javascript/auto',
@@ -29,6 +29,14 @@ module.exports = () => {
             options: { name: '[name].[ext]' },
           },
         ],
+      },
+      {
+        test: /\.(png|jpg|gif|eot|woff|woff2)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: './assets',
+        },
       },
     ],
   };

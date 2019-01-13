@@ -1,9 +1,4 @@
 /* eslint-env node */
-// import path from 'path';
-// import moduleConfig from './webpack/module.config';
-// import plugins from './webpack/plugins.config';
-// import devServer from './webpack/devserver.config';
-
 const path = require('path');
 const moduleConfig = require('./webpack/module.config');
 const plugins = require('./webpack/plugins.config');

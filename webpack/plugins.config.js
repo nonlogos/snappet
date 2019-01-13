@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const compressionPlugin = require('compression-webpack-plugin');
-const StyleExtHtmlWebpackPlugin = require('style-ext-html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -16,10 +15,13 @@ module.exports = (env, options) => {
       filename: 'asset-manifest.json',
     }),
   ];
-
-  if (process.env.ANALYZE) {
-    plugins.push(new BundleAnalyzerPlugin());
-  }
+  plugins.push(
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'disabled',
+      generateStatsFile: true,
+      statsOptions: { source: false },
+    })
+  );
   // Prod configs handling
   if (env === 'prod') {
     plugins.push(
@@ -46,6 +48,6 @@ module.exports = (env, options) => {
     plugins.push(new webpack.NamedModulesPlugin());
     plugins.push(new webpack.HotModuleReplacementPlugin());
   }
-  // plugins.push(new StyleExtHtmlWebpackPlugin());
+
   return plugins;
 };

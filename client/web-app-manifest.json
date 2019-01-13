@@ -2,26 +2,26 @@
   "short_name": "Starter",
   "name": "Starter",
   "theme_color": "#2196F3",
-  "background_color": "FFF",
+  "background_color": "#EEE",
   "display": "standalone",
   "icons": [
     {
-      "src": "/images/launcher-icon-1x.png",
+      "src": "/assets/launcher-icon-1x.png",
       "type": "image/png",
       "sizes": "48x48"
     },
     {
-      "src": "/images/launcher-icon-2x.png",
+      "src": "/assets/launcher-icon-2x.png",
       "type": "image/png",
       "sizes": "96x96"
     },
     {
-      "src": "/images/launcher-icon-4x.png",
+      "src": "/assets/launcher-icon-4x.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/images/launcher-icon-512.png",
+      "src": "/assets/launcher-icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

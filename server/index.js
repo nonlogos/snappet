@@ -60,12 +60,13 @@ server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.dateParser());
 server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.gzipResponse());
 server.get('/api', (req, res, next) => {
   res.send({ ok: true });
   return next();
 });
 
-// serve app entry point
+// serve static images
 server.get(
   '/images',
   restify.plugins.serveStatic({
@@ -73,7 +74,6 @@ server.get(
   })
 );
 
-// serve static images
 server.get(
   '*',
   restify.plugins.serveStatic({

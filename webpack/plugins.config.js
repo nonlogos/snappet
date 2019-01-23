@@ -18,7 +18,6 @@ module.exports = (env, options) => {
   plugins.push(
     new BundleAnalyzerPlugin({
       analyzerMode: 'disabled',
-      generateStatsFile: true,
       statsOptions: { source: false },
     })
   );

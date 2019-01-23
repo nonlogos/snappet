@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 
+const devMode = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'prod';
+
 // * helper functions------------------------------------
 /**
  *
@@ -31,8 +33,12 @@ const _handleTLSNotExist = (cond, path) => {
  * @returns {object}
  */
 const handleTLS = () => {
-  const TLS_KEY_PATH = path.join(__dirname, '..', '..', 'private', 'key.pem');
-  const TLS_CERT_PATH = path.join(__dirname, '..', '..', 'private', 'cert.pem');
+  const TLS_KEY_PATH = devMode
+    ? path.join(__dirname, '..', '..', '..', 'private', 'key.pem')
+    : path.join(__dirname, '..', 'key.pem');
+  const TLS_CERT_PATH = devMode
+    ? path.join(__dirname, '..', '..', '..', 'private', 'cert.pem')
+    : path.join(__dirname, '..', 'cert.pem');
   const isKeyExist = fs.existsSync(TLS_KEY_PATH);
   const isCertExist = fs.existsSync(TLS_CERT_PATH);
   // exit process if no TLS cert or key is found

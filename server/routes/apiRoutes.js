@@ -1,11 +1,11 @@
-'use strict';
 import express from 'express';
 import { GithubGistAPI } from '../services/restApi';
 import { userFindById } from '../services/dbHelpers/userHelper';
 import { gistFindAndUpdate } from '../services/dbHelpers/gistHelper';
+import isAuthenticated from '../middlewares/auth';
 
 const apis = express.Router();
-apis.get('/initiateGists', async (req, res, next) => {
+apis.get('/getGists', isAuthenticated, async (req, res, next) => {
   try {
     if (req.user) {
       const user = await userFindById(req.user);
@@ -24,7 +24,7 @@ apis.get('/initiateGists', async (req, res, next) => {
           updatedDBGists = await Promise.all(pArray);
         }
         res.status(200).send(JSON.stringify(updatedDBGists));
-      } else res.status(200).send('no user');
+      } else res.status(401).send('user needs to login');
     }
   } catch (error) {
     console.log('initiateGists', error);

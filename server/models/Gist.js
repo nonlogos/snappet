@@ -2,10 +2,10 @@
 import mongoose, { Schema } from 'mongoose';
 
 const GistSchema = new Schema({
-  githubId: String,
+  githubId: { type: String, required: true, index: { unique: true } },
   isPublic: String,
   created_at: String,
-  url: String,
+  url: { type: String, required: true },
   forks_url: String,
   commits_url: String,
   node_id: String,

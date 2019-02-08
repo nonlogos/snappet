@@ -2,13 +2,12 @@
 import mongoose, { Schema } from 'mongoose';
 
 const UserSchema = new Schema({
-  githubId: String,
-  email: String,
-  avatar_url: String,
-  gists_url: String,
+  githubId: { type: String, required: true, index: { unique: true } },
+  email: { type: String, required: true, index: { unique: true } },
+  avatar_url: { type: String, required: true, index: { unique: true } },
+  gists_url: { type: String, required: true, index: { unique: true } },
   nickName: String,
   name: String,
-  api_token: String,
   node_id: String,
 });
 

@@ -1,4 +1,3 @@
-'use strict';
 import mongoose from 'mongoose';
 import '../../models/Gist';
 

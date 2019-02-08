@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+
 import './index.scss';
 import App from './App';
 
@@ -21,4 +23,12 @@ import './assets/apple-touch-icon-180x180.png';
 // https://developer.mozilla.org/en-US/docs/Web/Manifest
 import './web-app-manifest.json';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const routing = (
+  <Router>
+    <div>
+      <Route path="/" component={App} />
+    </div>
+  </Router>
+);
+
+ReactDOM.render(routing, document.getElementById('root'));

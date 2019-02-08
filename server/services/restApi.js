@@ -1,4 +1,3 @@
-'use strict';
 import axios from 'axios';
 
 export class GithubGistAPI {
@@ -9,6 +8,17 @@ export class GithubGistAPI {
         Authorization: `bearer ${this.token}`,
       },
     });
+  }
+
+  async getUser(gistURI) {
+    try {
+      if (!gistURI || typeof gistURI !== 'string') throw 'a gistURI string is required';
+      const userResult = await this.axiosInstance.get(gistURI).catch(error => this._apiErrorHandling(error));
+      return userResult;
+    } catch (error) {
+      console.log('getUser error', error);
+      throw new Error(error);
+    }
   }
 
   async getAllGists(gistsURI) {
@@ -31,7 +41,7 @@ export class GithubGistAPI {
       return finalResult;
     } catch (error) {
       console.log('getAllGists error', error);
-      throw error;
+      throw new Error(error);
     }
   }
 
@@ -45,7 +55,7 @@ export class GithubGistAPI {
       }
       return nextPageResult;
     } catch (error) {
-      throw error;
+      throw new Error(error);
     }
   }
 

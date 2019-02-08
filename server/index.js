@@ -4,13 +4,11 @@ import path from 'path';
 import bunyan from 'bunyan';
 import chalk from 'chalk';
 import restify from 'restify';
-import { graphqlRestify, graphiqlRestify } from 'apollo-server-restify';
 import CookieParser from 'restify-cookies';
-import sessions from 'client-sessions';
-import passport from 'passport-restify';
 import corsMiddleware from 'restify-cors-middleware';
 
 import authRouter from './routes/authRoutes';
+import gistRouter from './routes/gistRoutes';
 import handleTLS from './services/connectionHelpers/handleTLS';
 import {
   tcpConnection,
@@ -19,12 +17,8 @@ import {
   HTTP_REDIRECT_ADDRESS,
   HTTPS_ADDRESS,
 } from './services/connectionHelpers/handleTCP-HTTP';
-import GraphQLSchema from './schema/schema';
 import MongoConnect from './services/connectionHelpers/setUpMongoose';
-import './services/passport';
-import './models/User';
-
-require('dotenv').config({ path: path.join(__dirname, '..', 'config.env') });
+import { isAuthenticated } from './middlewares/auth';
 
 // * handle tcp/https(2) connection and http redirect
 net.createServer(tcpConnection).listen(HTTP_BASE_ADDRESS);
@@ -73,38 +67,18 @@ server.use(
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.dateParser());
-server.use(restify.plugins.bodyParser());
+server.use(
+  restify.plugins.bodyParser({
+    mapParams: true,
+  })
+);
 server.use(cors.actual);
 server.use(restify.plugins.gzipResponse());
-// server.use(restify.plugins.fullResponse());
 server.use(CookieParser.parse);
-server
-  .use(
-    sessions({
-      // cookie name dictates the key name added to the request object
-      cookieName: 'session',
-      // should be a large unguessable string
-      secret: 'yoursecret',
-      // how long the session will stay valid in ms
-      duration: 365 * 24 * 60 * 60 * 1000,
-    })
-  )
-  .use(passport.initialize())
-  .use(passport.session());
 
-server.get('/api', (req, res, next) => {
-  res.send({ ok: true });
-  return next();
-});
-
-// * Set up a router
+// * Apply child routes
 authRouter.applyRoutes(server);
-
-// * Set up graphql
-const graphQLOptions = { schema: GraphQLSchema };
-server.post('/graphql', graphqlRestify(graphQLOptions));
-server.get('/graphql', graphqlRestify(graphQLOptions));
-server.get('/graphiql', graphiqlRestify({ endpointURL: '/graphql' }));
+gistRouter.applyRoutes(server);
 
 // * serve static html and images
 // TODO: test paths on prod build and client dev build
@@ -121,6 +95,7 @@ server.get(
 
 server.get(
   '*',
+  isAuthenticated,
   restify.plugins.serveStatic({
     directory: htmlPath,
     default: 'index.html',
